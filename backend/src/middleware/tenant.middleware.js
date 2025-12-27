@@ -1,6 +1,7 @@
 module.exports = (req, res, next) => {
   // super admin can access all tenants
   if (req.user.role === "super_admin") {
+    req.tenantId = null; // explicitly mark as no-tenant
     return next();
   }
 

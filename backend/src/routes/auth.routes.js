@@ -5,6 +5,9 @@ const { generateToken } = require('../utils/jwt');
 
 const router = express.Router();
 
+router.get('/ping', (req, res) => {
+  res.json({ ok: true });
+});
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -37,6 +40,20 @@ router.post('/login', async (req, res) => {
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// TEMP: debug bcrypt – remove after testing
+router.post('/debug-bcrypt', async (req, res) => {
+  const { password } = req.body;
+  const hash = '$2b$10$eIXQh0TefbCE9H1ixKfZReF1A5D0k/5LxIh9W2H1U4q1S3U4vX6tW'; // admin@saas.com hash
+
+  try {
+    const ok = await bcrypt.compare(password, hash);
+    return res.json({ ok });
+  } catch (e) {
+    console.error('debug-bcrypt error', e);
+    return res.status(500).json({ message: 'error' });
   }
 });
 
